@@ -18,15 +18,22 @@ steps:
 #     jdkArchitectureOption: 'x64'
 #     jdkSourceOption: 'PreInstalled'
 
+- script: 'chmod +x ./gradlew'
+  displayName: 'Permissions'
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
     tasks: 'build'  # Replace with the tasks you want to run
-    options: '-Xmx3072m' 
+    options: '-mx3072m' 
     publishJUnitResults: false
     # testResultsFiles: '**/TEST-*.xml'  # Updated pattern for test result files
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: 'default'  # Replace with your JDK version
     jdkArchitectureOption: 'x64'
 
-  
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: 'build/libs'
+    artifactName: 'drop'
+    publishLocation: 'Container'
