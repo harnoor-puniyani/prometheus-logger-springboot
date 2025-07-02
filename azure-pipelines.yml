@@ -12,12 +12,12 @@ pool:
 
 steps:  
 
-- task: JavaToolInstaller@1
-  inputs:
-    versionSpec: '24'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
-    
+# - task: JavaToolInstaller@1
+#   inputs:
+#     versionSpec: '24'
+#     jdkArchitectureOption: 'x64'
+#     jdkSourceOption: 'PreInstalled'
+
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
@@ -26,7 +26,7 @@ steps:
     publishJUnitResults: false
     # testResultsFiles: '**/TEST-*.xml'  # Updated pattern for test result files
     javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'  # Replace with your JDK version
+    jdkVersionOption: 'default'  # Replace with your JDK version
     jdkArchitectureOption: 'x64'
 
   
