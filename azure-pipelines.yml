@@ -9,7 +9,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
+
+steps:  
+
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
@@ -18,5 +20,7 @@ steps:
     publishJUnitResults: false
     # testResultsFiles: '**/TEST-*.xml'  # Updated pattern for test result files
     javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '24'  # Replace with your JDK version
+    jdkVersionOption: '1.11'  # Replace with your JDK version
     jdkArchitectureOption: 'x64'
+
+  
