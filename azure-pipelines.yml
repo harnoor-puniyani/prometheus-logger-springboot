@@ -1,39 +1,40 @@
-# Gradle
-# Build your Java project and run tests with Gradle using a Gradle wrapper script.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
-- master
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
+variables:
+  JAVA_VERSION: '21'
 
-steps:  
+steps:
+  # Use specific JDK version
+  
+  - task: JavaToolInstaller@1
+    inputs:
+      versionSpec: '$(JAVA_VERSION)'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
 
-# - task: JavaToolInstaller@1
-#   inputs:
-#     versionSpec: '24'
-#     jdkArchitectureOption: 'x64'
-#     jdkSourceOption: 'PreInstalled'
+  # Run Gradle build using built-in Gradle task
+  - task: Gradle@3
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+      options: '--no-daemon'
+      publishJUnitResults: false
+      testResultsFiles: '**/build/test-results/test/TEST-*.xml'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '$(JAVA_VERSION)'
+      jdkArchitectureOption: 'x64'
+      sonarQubeRunAnalysis: false
 
-- script: 'chmod +x ./gradlew'
-  displayName: 'Permissions'
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
-    tasks: 'build'  # Replace with the tasks you want to run
-    # options: '-mx3072m' 
-    publishJUnitResults: false
-    # testResultsFiles: '**/TEST-*.xml'  # Updated pattern for test result files
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: 'default'  # Replace with your JDK version
-    jdkArchitectureOption: 'x64'
-
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: 'build/libs'
-    artifactName: 'drop'
-    publishLocation: 'Container'
+  # Publish built JARs or artifacts
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'build/libs'
+      artifactName: 'drop'
+      publishLocation: 'Container'
