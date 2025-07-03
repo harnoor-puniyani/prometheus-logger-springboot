@@ -11,7 +11,7 @@ resources:
 - repo: self
 
 variables:
-  basetag: 'harnoorpuniyani/prometheus-logger-springboot:'
+  basetag: 'harnoorpuniyani/prometheus-logger-springboot'
   buildtag: '$(Build.BuildNumber)'
   latesttag: 'latest'
 
@@ -24,15 +24,6 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    # - task: Docker@2
-    #   inputs:
-    #     containerRegistry: 'docker-harnoorpuniyani'
-    #     repository: 'harnoorpuniyani/echoapp'
-    #     command: 'buildAndPush'
-    #     Dockerfile: '**/Dockerfile'
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)
     - task: DockerInstaller@0
       inputs:
         dockerVersion: '28.3.0'
@@ -51,5 +42,5 @@ stages:
       displayName: create Buildx Builder
 
     - script: |
-        docker buildx build --platform linux/amd64,linux/arm64 -t '$(basetag)$(tag)' -t '$(basetag)$(latest)' . --push
+        docker buildx build --platform linux/amd64,linux/arm64 -t '$(basetag):$(tag)' -t '$(basetag):$(latest)' . --push
       displayName: Create and Push Multi Architecture Image
