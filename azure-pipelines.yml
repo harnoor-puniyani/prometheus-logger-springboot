@@ -11,7 +11,9 @@ resources:
 - repo: self
 
 variables:
-  tag: 'harnoorpuniyani/prometheus-logger-springboot:$(Build.BuildNumber)'
+  basetag: 'harnoorpuniyani/prometheus-logger-springboot:'
+  buildtag: '$(Build.BuildNumber)'
+  latesttag: 'latest'
 
 stages:
 - stage: Build
@@ -49,5 +51,5 @@ stages:
       displayName: create Buildx Builder
 
     - script: |
-        docker buildx build --platform linux/amd64,linux/arm64 -t $(tag) -t harnoorpuniyani/echoapp:latest . --push
+        docker buildx build --platform linux/amd64,linux/arm64 -t $(basetag)$(tag) -t $(basetag)$(latest) . --push
       displayName: Create and Push Multi Architecture Image
