@@ -42,5 +42,5 @@ stages:
       displayName: create Buildx Builder
 
     - script: |
-        docker buildx build --platform linux/amd64,linux/arm64 -t '$(basetag):$(buildtag)' -t '$(basetag):$(latest)' . --push
+        docker buildx build --platform linux/amd64,linux/arm64 -t '$(basetag):$(buildtag)' -t '$(basetag):$(latesttag)' . --push
       displayName: Create and Push Multi Architecture Image
