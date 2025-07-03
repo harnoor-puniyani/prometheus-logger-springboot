@@ -22,12 +22,12 @@ RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar --no-daemon
 
 # ---- Step 2: Runtime stage (minimal) ----
-FROM debian:bullseye-slim
+FROM eclipse-temurin:24-jre
 
 # Copy the JDK 24 from build stage
-COPY --from=builder /opt/jdk /opt/jdk
-ENV JAVA_HOME=/opt/jdk
-ENV PATH="$JAVA_HOME/bin:$PATH"
+# COPY --from=builder /opt/jdk /opt/jdk
+# ENV JAVA_HOME=/opt/jdk
+# ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Create app directory
 WORKDIR /app
