@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-      - main
+      - master
 
 resources:
 - repo: self
@@ -51,5 +51,5 @@ stages:
       displayName: create Buildx Builder
 
     - script: |
-        docker buildx build --platform linux/amd64,linux/arm64 -t $(basetag)$(tag) -t $(basetag)$(latest) . --push
+        docker buildx build --platform linux/amd64,linux/arm64 -t '$(basetag)$(tag)' -t '$(basetag)$(latest)' . --push
       displayName: Create and Push Multi Architecture Image
