@@ -1,16 +1,16 @@
 # ---- Step 1: Build stage with Gradle and JDK 24 ----
-FROM gradle:8.5-jdk21 AS builder
+FROM eclipse-temurin:24-jdk AS builder
 
 # Download and install JDK 24 manually
-ENV JDK_DOWNLOAD_URL=https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.tar.gz
-RUN curl -fsSL $JDK_DOWNLOAD_URL -o jdk24.tar.gz && \
-    mkdir /opt/jdk && \
-    tar -xzf jdk24.tar.gz -C /opt/jdk --strip-components=1 && \
-    rm jdk24.tar.gz
+# ENV JDK_DOWNLOAD_URL=https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.tar.gz
+# RUN curl -fsSL $JDK_DOWNLOAD_URL -o jdk24.tar.gz && \
+#     mkdir /opt/jdk && \
+#     tar -xzf jdk24.tar.gz -C /opt/jdk --strip-components=1 && \
+#     rm jdk24.tar.gz
 
-# Set JDK 24 as the default Java
-ENV JAVA_HOME=/opt/jdk
-ENV PATH="$JAVA_HOME/bin:$PATH"
+# # Set JDK 24 as the default Java
+# ENV JAVA_HOME=/opt/jdk
+# ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Set work directory and copy app
 WORKDIR /app
