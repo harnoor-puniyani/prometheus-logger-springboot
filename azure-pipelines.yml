@@ -1,40 +1,51 @@
-trigger:
-  branches:
-    include:
-      - main
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-pool:
-  vmImage: 'ubuntu-latest'
+trigger:
+- main
+
+resources:
+- repo: self
 
 variables:
-  JAVA_VERSION: '21'
+  tag: 'harnoorpuniyani/prometheus-logger-springboot:$(Build.BuildNumber)'
 
-steps:
-  # Use specific JDK version
-  
-  - task: JavaToolInstaller@1
-    inputs:
-      versionSpec: '$(JAVA_VERSION)'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    # - task: Docker@2
+    #   inputs:
+    #     containerRegistry: 'docker-harnoorpuniyani'
+    #     repository: 'harnoorpuniyani/echoapp'
+    #     command: 'buildAndPush'
+    #     Dockerfile: '**/Dockerfile'
+    #     tags: |
+    #       latest
+    #       $(Build.BuildNumber)
+    - task: DockerInstaller@0
+      inputs:
+        dockerVersion: '28.3.0'
+    - script: docker buildx version
+      displayName: Check docker buildx
+    
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker-harnoorpuniyani'
+        command: 'login'
+        addPipelineData: false
+        addBaseImageData: false
+    
+    - script: |
+        docker buildx create --use --name builder
+      displayName: create Buildx Builder
 
-  # Run Gradle build using built-in Gradle task
-  - task: Gradle@3
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      tasks: 'build'
-      options: '--no-daemon'
-      publishJUnitResults: false
-      testResultsFiles: '**/build/test-results/test/TEST-*.xml'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '$(JAVA_VERSION)'
-      jdkArchitectureOption: 'x64'
-      sonarQubeRunAnalysis: false
-
-  # Publish built JARs or artifacts
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: 'build/libs'
-      artifactName: 'drop'
-      publishLocation: 'Container'
+    - script: |
+        docker buildx build --platform linux/amd64,linux/arm64 -t $(tag) -t harnoorpuniyani/echoapp:latest . --push
+      displayName: Create and Push Multi Architecture Image
