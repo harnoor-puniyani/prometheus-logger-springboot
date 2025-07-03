@@ -16,6 +16,8 @@ FROM eclipse-temurin:24-jdk AS builder
 WORKDIR /app
 COPY . .
 
+RUN chmod +x ./gradlew
+
 # Build the app using JDK 24
 RUN ./gradlew clean bootJar --no-daemon
 
