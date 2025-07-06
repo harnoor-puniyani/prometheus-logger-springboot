@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: java-app-monitor
+  labels:
+    release: prometheus   # Match your Prometheus instance selector
+spec:
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      app: java
+  endpoints:
+    - targetPort: 5000
+      path: /actuator/prometheus
+      interval: 15s
